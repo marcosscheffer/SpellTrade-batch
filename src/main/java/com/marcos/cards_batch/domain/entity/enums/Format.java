@@ -1,5 +1,26 @@
 package com.marcos.cards_batch.domain.entity.enums;
 
 public enum Format {
-    
+    standart,
+    future,
+    historic,
+    timeless,
+    gladiator,
+    pioneer,
+    modern,
+    legacy,
+    pauper,
+    vintage,
+    penny,
+    commander,
+    oathbreaker,
+    standartbrawl,
+    brawl,
+    alchemy,
+    paupercommander,
+    duel,
+    oldschool,
+    premodern,
+    preedh,
+    tlr,
 }
