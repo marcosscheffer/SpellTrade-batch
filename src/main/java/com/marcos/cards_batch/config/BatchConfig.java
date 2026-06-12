@@ -35,12 +35,12 @@ public class BatchConfig {
     public Job importScryfallCardsJob() {
         return new JobBuilder("importScryfallCardsJob", jobRepository)
             .start(downloadCardsStep())
-            .next(processCardsStep())
+            .next(cardsStep())
             .build();
     }    
 
     @Bean
-    public Step processCardsStep() {
+    public Step cardsStep() {
         return new StepBuilder("processCardsStep", jobRepository)
             .<ScryfallCardDto, Card>chunk(100)
             .reader(scryfallStreamReader)

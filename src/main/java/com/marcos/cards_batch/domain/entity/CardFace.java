@@ -27,7 +27,7 @@ public class CardFace {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id")
-    private Card cardId;
+    private Card card;
 
     private Short faceIndex;
     private String name;

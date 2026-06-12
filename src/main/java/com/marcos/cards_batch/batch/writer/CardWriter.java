@@ -10,7 +10,7 @@ import com.marcos.cards_batch.domain.entity.Card;
 public class CardWriter implements ItemWriter<Card> {
 
     @Override
-    public void write(Chunk<? extends Card> chunk) throws Exception {
+    public ItemWriter<Card> write(Chunk<? extends Card> chunk) throws Exception {
         
     }
 }
