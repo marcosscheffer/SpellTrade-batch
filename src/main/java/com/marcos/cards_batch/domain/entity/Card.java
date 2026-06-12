@@ -1,14 +1,11 @@
 package com.marcos.cards_batch.domain.entity;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-import com.marcos.cards_batch.domain.enums.Color;
 import com.marcos.cards_batch.domain.enums.RarityType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -32,10 +29,6 @@ public class Card {
     private String typeLine;
     private String oracleText;
 
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "color_identity", columnDefinition = "color[]")
-    private List<Color> colorIdentity;
-
     private Boolean reserved;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,6 +39,6 @@ public class Card {
     private String toughness;
     private String loyalty;
 
-    @Column(columnDefinition = "rarity_type")
+    @Enumerated(EnumType.STRING)
     private RarityType rarity;
 }

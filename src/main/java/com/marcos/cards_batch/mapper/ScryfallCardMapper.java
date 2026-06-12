@@ -1,6 +1,7 @@
 package com.marcos.cards_batch.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import com.marcos.cards_batch.domain.entity.Card;
 import com.marcos.cards_batch.domain.enums.Color;
 import com.marcos.cards_batch.domain.enums.RarityType;
@@ -8,6 +9,7 @@ import com.marcos.cards_batch.dto.ScryfallCardDto;
 
 @Mapper(componentModel = "spring")
 public interface ScryfallCardMapper {
+    @Mapping(target = "set", ignore = true)
     Card toEntity(ScryfallCardDto dto);
 
     default Color mapColor(String color) {

@@ -23,5 +23,6 @@ public enum SetType {
     BOX,
     PROMO,
     TOKEN,
-    MEMORABILIA
+    MEMORABILIA,
+    MINIGAME
 }

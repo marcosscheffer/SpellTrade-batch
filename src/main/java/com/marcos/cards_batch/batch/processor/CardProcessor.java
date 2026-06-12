@@ -4,17 +4,25 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 import com.marcos.cards_batch.domain.entity.Card;
+import com.marcos.cards_batch.domain.entity.CardSet;
 import com.marcos.cards_batch.dto.ScryfallCardDto;
-
+import com.marcos.cards_batch.mapper.CardSetMapper;
 import com.marcos.cards_batch.mapper.ScryfallCardMapper;
+import com.marcos.cards_batch.repository.CardSetRepository;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class CardProcessor implements ItemProcessor<ScryfallCardDto, Card> {
 
     private final ScryfallCardMapper scryfallCardMapper;
+    private final CardSetMapper cardSetMapper;
+    private final CardSetRepository cardSetRepository;
 
-    public CardProcessor(ScryfallCardMapper scryfallCardMapper) {
+    public CardProcessor(ScryfallCardMapper scryfallCardMapper, CardSetRepository cardSetRepository, CardSetMapper cardSetMapper) {
         this.scryfallCardMapper = scryfallCardMapper;
+        this.cardSetMapper = cardSetMapper;
+        this.cardSetRepository = cardSetRepository;
     }
 
     @Override
@@ -22,7 +30,10 @@ public class CardProcessor implements ItemProcessor<ScryfallCardDto, Card> {
         if (item == null) {
             return null;
         }
-
-        return scryfallCardMapper.toEntity(item);
+        log.info("Processing cards");
+        CardSet cardSet = cardSetRepository.findById(item.setId()).orElseThrow(() -> new RuntimeException("CardSet not found"));
+        Card card = scryfallCardMapper.toEntity(item);
+        card.setSet(cardSet);
+        return card;
     } 
 }

@@ -2,8 +2,9 @@ package com.marcos.cards_batch.domain.entity;
 
 import java.util.UUID;
 import com.marcos.cards_batch.domain.enums.SetType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -20,6 +21,6 @@ public class CardSet {
     private String name;
     private String code;
 
-    @Column(columnDefinition = "set_type")
+    @Enumerated(EnumType.STRING)
     private SetType type;
 }

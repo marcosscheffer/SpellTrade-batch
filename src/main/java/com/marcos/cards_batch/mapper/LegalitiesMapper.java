@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import com.marcos.cards_batch.domain.entity.Card;
 import com.marcos.cards_batch.domain.entity.CardLegality;
 import com.marcos.cards_batch.domain.entity.CardLegalityId;
@@ -13,6 +14,7 @@ import com.marcos.cards_batch.dto.ScryfallCardDto;
 
 @Mapper(componentModel = "spring")
 public interface LegalitiesMapper {
+    @Mapping(target = "id", ignore = true)
     CardLegality toEntity(ScryfallCardDto dto);
 
     default List<CardLegality> mapLegality(Map<String, String> legalities, Card card) {

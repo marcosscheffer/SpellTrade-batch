@@ -1,9 +1,10 @@
 package com.marcos.cards_batch.domain.entity;
 
 import com.marcos.cards_batch.domain.enums.LegalityStatus;
-import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -25,6 +26,6 @@ public class CardLegality {
     @JoinColumn(name = "card_id")
     private Card card;
 
-    @Column(columnDefinition = "legality_status")
+    @Enumerated(EnumType.STRING)
     private LegalityStatus status;
 }
