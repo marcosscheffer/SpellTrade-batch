@@ -3,7 +3,7 @@ package com.marcos.cards_batch.domain.entity;
 import java.util.List;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import com.marcos.cards_batch.domain.entity.enums.Color;
+import com.marcos.cards_batch.domain.enums.Color;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -35,8 +35,8 @@ public class CardFace {
     private String typeLine;
 
     @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "color_identity", columnDefinition = "color[]")
-    private List<Color> colorIdentity;
+    @Column(name = "colors", columnDefinition = "color[]")
+    private List<Color> colors;
 
     private String oracleText;
 }

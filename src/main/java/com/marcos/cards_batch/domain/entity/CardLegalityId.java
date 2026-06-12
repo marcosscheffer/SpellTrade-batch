@@ -2,7 +2,7 @@ package com.marcos.cards_batch.domain.entity;
 
 import java.io.Serializable;
 import java.util.UUID;
-import com.marcos.cards_batch.domain.entity.enums.Format;
+import com.marcos.cards_batch.domain.enums.Format;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.EqualsAndHashCode;

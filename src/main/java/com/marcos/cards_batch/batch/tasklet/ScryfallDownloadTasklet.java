@@ -61,6 +61,7 @@ public class ScryfallDownloadTasklet implements Tasklet {
                 .GET()
                 .build();
             
+            log.info("Requesting  {}", uri);
             HttpResponse<T> response = client.send(request, bodyHandler);
 
             if(response.statusCode() == 404) {

@@ -1,6 +1,6 @@
 package com.marcos.cards_batch.domain.entity;
 
-import com.marcos.cards_batch.domain.entity.enums.LegalityStatus;
+import com.marcos.cards_batch.domain.enums.LegalityStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
