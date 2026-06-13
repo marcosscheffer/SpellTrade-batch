@@ -11,15 +11,18 @@ import org.springframework.context.annotation.Configuration;
 import com.marcos.cards_batch.batch.processor.CardFaceProcessor;
 import com.marcos.cards_batch.batch.processor.CardProcessor;
 import com.marcos.cards_batch.batch.processor.ImageProcessor;
+import com.marcos.cards_batch.batch.processor.LegalitiesProcessor;
 import com.marcos.cards_batch.batch.processor.SetProcessor;
 import com.marcos.cards_batch.batch.reader.ScryfallStreamReader;
 import com.marcos.cards_batch.batch.tasklet.ScryfallDownloadTasklet;
 import com.marcos.cards_batch.batch.writer.CardFaceWriter;
 import com.marcos.cards_batch.batch.writer.CardWriter;
 import com.marcos.cards_batch.batch.writer.ImageWriter;
+import com.marcos.cards_batch.batch.writer.LegalitiesWriter;
 import com.marcos.cards_batch.batch.writer.SetWriter;
 import com.marcos.cards_batch.domain.entity.Card;
 import com.marcos.cards_batch.domain.entity.CardFace;
+import com.marcos.cards_batch.domain.entity.CardLegality;
 import com.marcos.cards_batch.domain.entity.CardSet;
 import com.marcos.cards_batch.domain.entity.Image;
 import com.marcos.cards_batch.dto.ScryfallCardDto;
@@ -35,17 +38,22 @@ public class BatchConfig {
     private final SetProcessor setProcessor;
     private final CardFaceProcessor cardFaceProcessor;
     private final ImageProcessor imageProcessor;
+    private final LegalitiesProcessor legalitiesProcessor;
 
     private final CardWriter cardWriter;
     private final SetWriter setWriter;
     private final CardFaceWriter cardFaceWriter;
     private final ImageWriter imageWriter;
+    private final LegalitiesWriter legalitiesWriter;
+
+
 
     public BatchConfig(JobRepository jobRepository, ScryfallDownloadTasklet scryfallDownloadTasklet,
             ScryfallStreamReader scryfallStreamReader, CardProcessor cardProcessor,
             SetProcessor setProcessor, CardFaceProcessor cardFaceProcessor,
-            ImageProcessor imageProcessor, CardWriter cardWriter, SetWriter setWriter,
-            CardFaceWriter cardFaceWriter, ImageWriter imageWriter) {
+            ImageProcessor imageProcessor, LegalitiesProcessor legalitiesProcessor,
+            CardWriter cardWriter, SetWriter setWriter, CardFaceWriter cardFaceWriter,
+            ImageWriter imageWriter, LegalitiesWriter legalitiesWriter) {
         this.jobRepository = jobRepository;
         this.scryfallDownloadTasklet = scryfallDownloadTasklet;
         this.scryfallStreamReader = scryfallStreamReader;
@@ -53,10 +61,12 @@ public class BatchConfig {
         this.setProcessor = setProcessor;
         this.cardFaceProcessor = cardFaceProcessor;
         this.imageProcessor = imageProcessor;
+        this.legalitiesProcessor = legalitiesProcessor;
         this.cardWriter = cardWriter;
         this.setWriter = setWriter;
         this.cardFaceWriter = cardFaceWriter;
         this.imageWriter = imageWriter;
+        this.legalitiesWriter = legalitiesWriter;
     }
 
     @Bean
@@ -66,7 +76,8 @@ public class BatchConfig {
             //.next(setsStep())
             //.next(cardsStep())
             //.next(cardFacesStep())
-            .next(imagesStep())
+            //.next(imagesStep())
+            .next(legalitiesStep())
             .build();
     }    
 
@@ -99,12 +110,23 @@ public class BatchConfig {
             .build();
     }
 
+    @Bean
     public Step imagesStep() {
         return new StepBuilder("imagesStep", jobRepository)
             .<ScryfallCardDto, List<Image>>chunk(100)
             .reader(scryfallStreamReader)
             .processor(imageProcessor)
             .writer(imageWriter)
+            .build();
+    }
+
+    @Bean
+    public Step legalitiesStep() {
+        return new StepBuilder("legalitiesStep", jobRepository)
+            .<ScryfallCardDto, List<CardLegality>>chunk(1000)
+            .reader(scryfallStreamReader)
+            .processor(legalitiesProcessor)
+            .writer(legalitiesWriter)
             .build();
     }
 

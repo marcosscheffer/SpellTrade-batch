@@ -38,7 +38,7 @@ public class ImageProcessor implements ItemProcessor<ScryfallCardDto, List<Image
         if (item.imageUris() == null && item.cardFaces() == null) {
             log.info("No image for card {}", item.name());
             return null;
-        } else if (item.cardFaces() == null) {
+        } else if (item.imageUris() != null) {
             Image image = imageMapper.toEntity(item.imageUris());
             Card card = cardRepository.findById(item.id()).orElseThrow(() -> new RuntimeException("Card Not Found"));
             image.setCard(card);

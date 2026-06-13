@@ -1,7 +1,7 @@
 package com.marcos.cards_batch.domain.enums;
 
 public enum Format {
-    STANDART,
+    STANDARD,
     FUTURE,
     HISTORIC,
     TIMELESS,
@@ -14,13 +14,13 @@ public enum Format {
     PENNY,
     COMMANDER,
     OATHBREAKER,
-    STANDARTBRAWL,
+    STANDARDBRAWL,
     BRAWL,
     ALCHEMY,
     PAUPERCOMMANDER,
     DUEL,
     OLDSCHOOL,
     PREMODERN,
-    PREEDH,
+    PREDH,
     TLR
 }
