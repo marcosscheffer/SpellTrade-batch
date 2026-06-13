@@ -1,6 +1,5 @@
 package com.marcos.cards_batch.dto;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -14,7 +13,6 @@ public record CardFacesDto(
 
     @JsonProperty("type_line")
     String typeLine,
-    List<String> colors,
 
     @JsonProperty("oracle_text")
     String oracleText,

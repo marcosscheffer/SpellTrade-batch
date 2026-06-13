@@ -6,9 +6,11 @@ import org.springframework.batch.infrastructure.item.ItemWriter;
 import org.springframework.stereotype.Component;
 import com.marcos.cards_batch.domain.entity.Card;
 import com.marcos.cards_batch.repository.CardRepository;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Component
+@Slf4j
 public class CardWriter implements ItemWriter<Card> {
     private final CardRepository cardRepository;
 
@@ -19,6 +21,7 @@ public class CardWriter implements ItemWriter<Card> {
     @Override
     public void write(Chunk<? extends Card> chunk) throws Exception {
         List<? extends Card> items = chunk.getItems();
+        log.info("Saving Cards - {} B", items.size());
         cardRepository.saveAll(items);
     }
 }

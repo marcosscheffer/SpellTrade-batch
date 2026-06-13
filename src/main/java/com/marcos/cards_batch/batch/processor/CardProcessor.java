@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import com.marcos.cards_batch.domain.entity.Card;
 import com.marcos.cards_batch.domain.entity.CardSet;
 import com.marcos.cards_batch.dto.ScryfallCardDto;
-import com.marcos.cards_batch.mapper.CardSetMapper;
 import com.marcos.cards_batch.mapper.ScryfallCardMapper;
 import com.marcos.cards_batch.repository.CardSetRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -16,12 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 public class CardProcessor implements ItemProcessor<ScryfallCardDto, Card> {
 
     private final ScryfallCardMapper scryfallCardMapper;
-    private final CardSetMapper cardSetMapper;
     private final CardSetRepository cardSetRepository;
 
-    public CardProcessor(ScryfallCardMapper scryfallCardMapper, CardSetRepository cardSetRepository, CardSetMapper cardSetMapper) {
+    public CardProcessor(ScryfallCardMapper scryfallCardMapper, CardSetRepository cardSetRepository) {
         this.scryfallCardMapper = scryfallCardMapper;
-        this.cardSetMapper = cardSetMapper;
         this.cardSetRepository = cardSetRepository;
     }
 
@@ -30,7 +27,7 @@ public class CardProcessor implements ItemProcessor<ScryfallCardDto, Card> {
         if (item == null) {
             return null;
         }
-        log.info("Processing cards");
+        log.info("Processing card {}", item.name());
         CardSet cardSet = cardSetRepository.findById(item.setId()).orElseThrow(() -> new RuntimeException("CardSet not found"));
         Card card = scryfallCardMapper.toEntity(item);
         card.setSet(cardSet);
