@@ -24,7 +24,7 @@ public class SetProcessor implements ItemProcessor<ScryfallCardDto, CardSet>{
             log.info("Sets importing completed");
             return null;
         }
-        log.info("Processing set {}", item.setName());
+        log.debug("Processing set {}", item.setName());
 
         return cardSetMapper.toEntity(item);
     }

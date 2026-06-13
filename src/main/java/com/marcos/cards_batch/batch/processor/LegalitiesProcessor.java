@@ -28,7 +28,7 @@ public class LegalitiesProcessor implements ItemProcessor<ScryfallCardDto, List<
     @Override
     public @Nullable List<CardLegality> process(ScryfallCardDto item) throws Exception {
         List<CardLegality> cardLegalities = new ArrayList<>();
-        log.info("Processing formats of card {}", item.name());
+        log.debug("Processing formats of card {}", item.name());
 
         for (Map.Entry<String, String> entry : item.legalities().entrySet()) {
             CardLegalityId cardLegalityId = new CardLegalityId();

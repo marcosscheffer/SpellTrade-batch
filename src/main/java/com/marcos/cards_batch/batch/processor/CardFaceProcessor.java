@@ -31,14 +31,14 @@ public class CardFaceProcessor implements ItemProcessor<ScryfallCardDto, List<Ca
         List<CardFace> cardFaces = new ArrayList<>();
 
         if (item.cardFaces() == null) {
-            log.info("No faces found");
+            log.debug("No faces found");
             faceIndex = 0;
             return null;
         }
 
-        log.info("Faces found");
+        log.debug("Faces found");
         for (CardFacesDto face : item.cardFaces()) {
-            log.info("Processing face {}", face.name());
+            log.debug("Processing face {}", face.name());
             cardFace = cardFacesMapper.toEntity(face);
             Card card = cardRepository.findById(item.id()).orElseThrow(() -> new RuntimeException("Card Not Found"));
             cardFace.setCard(card);
