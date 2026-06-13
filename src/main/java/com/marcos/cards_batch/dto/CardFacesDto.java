@@ -17,6 +17,10 @@ public record CardFacesDto(
     @JsonProperty("oracle_text")
     String oracleText,
 
+    String power,
+    String toughness,
+    String loyalty,
+
     @JsonProperty("image_uris")
     ImageDto imageUris
 ) {

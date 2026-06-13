@@ -1,5 +1,8 @@
 package com.marcos.cards_batch.repository;
 
-public class ImageRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.marcos.cards_batch.domain.entity.Image;
+
+public interface ImageRepository extends JpaRepository<Image, Long>{
     
 }
