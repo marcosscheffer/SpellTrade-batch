@@ -20,7 +20,10 @@ public class ImageWriter implements ItemWriter<List<Image>>{
     @Override
     public void write(Chunk<? extends List<Image>> chunk) throws Exception {
         List<? extends List<Image>> items = chunk.getItems();
-        List<Image> images = items.stream().flatMap(list -> list.stream()).toList();
+        List<Image> images = items.stream()
+            .flatMap(list -> list.stream())
+            .toList();
+            
         log.info("Saving Images - {} B", images.size());
         imageRepository.saveAll(images);
     }

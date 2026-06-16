@@ -10,5 +10,6 @@ public interface ImageMapper {
     @Mapping(target = "card", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "cardFace", ignore = true)
+    @Mapping(target = "faceIndex", ignore = true)
     Image toEntity(ImageDto dto);
 }

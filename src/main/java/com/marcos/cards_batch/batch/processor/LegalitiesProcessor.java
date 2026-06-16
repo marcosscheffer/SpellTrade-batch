@@ -39,7 +39,7 @@ public class LegalitiesProcessor implements ItemProcessor<ScryfallCardDto, List<
             cardLegality.setId(cardLegalityId);
             cardLegality.setStatus(LegalityStatus.valueOf(entry.getValue().toUpperCase()));
             
-            Card card = cardRepository.findById(item.id()).orElseThrow(() -> new RuntimeException("Card not found"));
+            Card card = cardRepository.getReferenceById(item.id());
             cardLegality.setCard(card);
 
             cardLegalities.add(cardLegality);

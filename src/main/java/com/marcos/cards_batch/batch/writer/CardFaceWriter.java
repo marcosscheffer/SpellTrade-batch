@@ -23,7 +23,7 @@ public class CardFaceWriter implements ItemWriter<List<CardFace>> {
         List<CardFace> cardFaces = items.stream()
             .flatMap(list -> list.stream())
             .toList();
-        log.info("Saving cards faces - {}B", cardFaces.size());
+        log.info("Saving cards faces - {} B", cardFaces.size());
         cardFaceRepository.saveAll(cardFaces);
     }
 }

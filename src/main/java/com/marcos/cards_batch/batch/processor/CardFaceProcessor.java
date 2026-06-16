@@ -10,6 +10,7 @@ import com.marcos.cards_batch.domain.entity.CardFace;
 import com.marcos.cards_batch.dto.CardFacesDto;
 import com.marcos.cards_batch.dto.ScryfallCardDto;
 import com.marcos.cards_batch.mapper.CardFacesMapper;
+import com.marcos.cards_batch.repository.CardFaceRepository;
 import com.marcos.cards_batch.repository.CardRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,17 +19,19 @@ import lombok.extern.slf4j.Slf4j;
 public class CardFaceProcessor implements ItemProcessor<ScryfallCardDto, List<CardFace>> {
     private final CardFacesMapper cardFacesMapper;
     private final CardRepository cardRepository;
+    private final CardFaceRepository cardFaceRepository;
 
-    public CardFaceProcessor(CardFacesMapper cardFacesMapper, CardRepository cardRepository) {
+    public CardFaceProcessor(CardFacesMapper cardFacesMapper, CardRepository cardRepository, CardFaceRepository cardFaceRepository) {
         this.cardFacesMapper = cardFacesMapper;
         this.cardRepository = cardRepository;
+        this.cardFaceRepository = cardFaceRepository;
     }
 
     @Override
     public @Nullable List<CardFace> process(ScryfallCardDto item) throws Exception {
+        List<CardFace> cardFaces = new ArrayList<>();
         short faceIndex = 0;
         CardFace cardFace = null;
-        List<CardFace> cardFaces = new ArrayList<>();
 
         if (item.cardFaces() == null) {
             log.debug("No faces found");
@@ -37,13 +40,18 @@ public class CardFaceProcessor implements ItemProcessor<ScryfallCardDto, List<Ca
         }
 
         log.debug("Faces found");
+        Card card = cardRepository.getReferenceById(item.id());
         for (CardFacesDto face : item.cardFaces()) {
             log.debug("Processing face {}", face.name());
-            cardFace = cardFacesMapper.toEntity(face);
-            Card card = cardRepository.findById(item.id()).orElseThrow(() -> new RuntimeException("Card Not Found"));
-            cardFace.setCard(card);
-            cardFace.setFaceIndex(faceIndex);
-            cardFaces.add(cardFace);
+            boolean exists = cardFaceRepository.existsByCardIdAndFaceIndex(item.id(), faceIndex);
+
+            if (!exists) {
+                cardFace = cardFacesMapper.toEntity(face);
+                cardFace.setCard(card);
+                cardFace.setFaceIndex(faceIndex);
+                cardFaces.add(cardFace);
+            }
+            
             faceIndex++;
         }
         

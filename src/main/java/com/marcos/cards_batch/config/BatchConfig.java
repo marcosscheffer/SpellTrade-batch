@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.marcos.cards_batch.batch.processor.CardFaceProcessor;
 import com.marcos.cards_batch.batch.processor.CardProcessor;
+import com.marcos.cards_batch.batch.processor.ColorIdentityProcessor;
 import com.marcos.cards_batch.batch.processor.ImageProcessor;
 import com.marcos.cards_batch.batch.processor.LegalitiesProcessor;
 import com.marcos.cards_batch.batch.processor.SetProcessor;
@@ -17,6 +18,7 @@ import com.marcos.cards_batch.batch.reader.ScryfallStreamReader;
 import com.marcos.cards_batch.batch.tasklet.ScryfallDownloadTasklet;
 import com.marcos.cards_batch.batch.writer.CardFaceWriter;
 import com.marcos.cards_batch.batch.writer.CardWriter;
+import com.marcos.cards_batch.batch.writer.ColorIdentityWriter;
 import com.marcos.cards_batch.batch.writer.ImageWriter;
 import com.marcos.cards_batch.batch.writer.LegalitiesWriter;
 import com.marcos.cards_batch.batch.writer.SetWriter;
@@ -24,6 +26,7 @@ import com.marcos.cards_batch.domain.entity.Card;
 import com.marcos.cards_batch.domain.entity.CardFace;
 import com.marcos.cards_batch.domain.entity.CardLegality;
 import com.marcos.cards_batch.domain.entity.CardSet;
+import com.marcos.cards_batch.domain.entity.ColorIdentity;
 import com.marcos.cards_batch.domain.entity.Image;
 import com.marcos.cards_batch.dto.ScryfallCardDto;
 
@@ -39,21 +42,23 @@ public class BatchConfig {
     private final CardFaceProcessor cardFaceProcessor;
     private final ImageProcessor imageProcessor;
     private final LegalitiesProcessor legalitiesProcessor;
+    private final ColorIdentityProcessor colorIdentityProcessor;
 
     private final CardWriter cardWriter;
     private final SetWriter setWriter;
     private final CardFaceWriter cardFaceWriter;
     private final ImageWriter imageWriter;
     private final LegalitiesWriter legalitiesWriter;
-
-
-
+    private final ColorIdentityWriter colorIdentityWriter;
+    
     public BatchConfig(JobRepository jobRepository, ScryfallDownloadTasklet scryfallDownloadTasklet,
             ScryfallStreamReader scryfallStreamReader, CardProcessor cardProcessor,
             SetProcessor setProcessor, CardFaceProcessor cardFaceProcessor,
             ImageProcessor imageProcessor, LegalitiesProcessor legalitiesProcessor,
+            com.marcos.cards_batch.batch.processor.ColorIdentityProcessor colorIdentityProcessor,
             CardWriter cardWriter, SetWriter setWriter, CardFaceWriter cardFaceWriter,
-            ImageWriter imageWriter, LegalitiesWriter legalitiesWriter) {
+            ImageWriter imageWriter, LegalitiesWriter legalitiesWriter,
+            com.marcos.cards_batch.batch.writer.ColorIdentityWriter colorIdentityWriter) {
         this.jobRepository = jobRepository;
         this.scryfallDownloadTasklet = scryfallDownloadTasklet;
         this.scryfallStreamReader = scryfallStreamReader;
@@ -62,29 +67,43 @@ public class BatchConfig {
         this.cardFaceProcessor = cardFaceProcessor;
         this.imageProcessor = imageProcessor;
         this.legalitiesProcessor = legalitiesProcessor;
+        this.colorIdentityProcessor = colorIdentityProcessor;
         this.cardWriter = cardWriter;
         this.setWriter = setWriter;
         this.cardFaceWriter = cardFaceWriter;
         this.imageWriter = imageWriter;
         this.legalitiesWriter = legalitiesWriter;
+        this.colorIdentityWriter = colorIdentityWriter;
     }
+
 
     @Bean
     public Job importScryfallCardsJob() {
         return new JobBuilder("importScryfallCardsJob", jobRepository)
             .start(downloadCardsStep())
-            //.next(setsStep())
-            //.next(cardsStep())
-            //.next(cardFacesStep())
-            //.next(imagesStep())
+            .next(setsStep())
+            .next(cardsStep())
+            .next(colorIdentityStep())
+            .next(cardFacesStep())
+            .next(imagesStep())
             .next(legalitiesStep())
             .build();
-    }    
+    }
+    
+    @Bean
+    public Step colorIdentityStep() {
+        return new StepBuilder("colorIdentityStep", jobRepository)
+            .<ScryfallCardDto, List<ColorIdentity>>chunk(500)
+            .reader(scryfallStreamReader)
+            .processor(colorIdentityProcessor)
+            .writer(colorIdentityWriter)
+            .build();
+    }
 
     @Bean
     public Step cardsStep() {
         return new StepBuilder("cardsStep", jobRepository)
-            .<ScryfallCardDto, Card>chunk(100)
+            .<ScryfallCardDto, Card>chunk(500)
             .reader(scryfallStreamReader)
             .processor(cardProcessor)
             .writer(cardWriter)
@@ -93,7 +112,7 @@ public class BatchConfig {
 
     @Bean Step setsStep() {
         return new StepBuilder("setsStep", jobRepository)
-            .<ScryfallCardDto, CardSet>chunk(100)
+            .<ScryfallCardDto, CardSet>chunk(500)
             .reader(scryfallStreamReader)
             .processor(setProcessor)
             .writer(setWriter)
@@ -103,7 +122,7 @@ public class BatchConfig {
     @Bean
     public Step cardFacesStep() {
         return new StepBuilder("cardFacesStep", jobRepository)
-            .<ScryfallCardDto, List<CardFace>>chunk(100)
+            .<ScryfallCardDto, List<CardFace>>chunk(500)
             .reader(scryfallStreamReader)
             .processor(cardFaceProcessor)
             .writer(cardFaceWriter)
@@ -113,7 +132,7 @@ public class BatchConfig {
     @Bean
     public Step imagesStep() {
         return new StepBuilder("imagesStep", jobRepository)
-            .<ScryfallCardDto, List<Image>>chunk(100)
+            .<ScryfallCardDto, List<Image>>chunk(500)
             .reader(scryfallStreamReader)
             .processor(imageProcessor)
             .writer(imageWriter)
@@ -123,7 +142,7 @@ public class BatchConfig {
     @Bean
     public Step legalitiesStep() {
         return new StepBuilder("legalitiesStep", jobRepository)
-            .<ScryfallCardDto, List<CardLegality>>chunk(1000)
+            .<ScryfallCardDto, List<CardLegality>>chunk(500)
             .reader(scryfallStreamReader)
             .processor(legalitiesProcessor)
             .writer(legalitiesWriter)

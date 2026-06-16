@@ -27,8 +27,8 @@ public class CardProcessor implements ItemProcessor<ScryfallCardDto, Card> {
         if (item == null) {
             return null;
         }
-        log.info("Processing card {}", item.name());
-        CardSet cardSet = cardSetRepository.findById(item.setId()).orElseThrow(() -> new RuntimeException("CardSet not found"));
+        log.debug("Processing card {}", item.name());
+        CardSet cardSet = cardSetRepository.getReferenceById(item.setId());
         Card card = scryfallCardMapper.toEntity(item);
         card.setSet(cardSet);
         return card;
