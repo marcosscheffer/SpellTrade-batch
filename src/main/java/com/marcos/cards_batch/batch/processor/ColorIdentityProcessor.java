@@ -5,38 +5,25 @@ import java.util.List;
 import org.jspecify.annotations.Nullable;
 import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.stereotype.Component;
-import com.marcos.cards_batch.domain.entity.Card;
-import com.marcos.cards_batch.domain.entity.ColorIdentity;
-import com.marcos.cards_batch.domain.entity.ColorIdentityId;
+import com.marcos.cards_batch.domain.entity.ColorIdentityJdbc;
 import com.marcos.cards_batch.domain.enums.Color;
 import com.marcos.cards_batch.dto.ScryfallCardDto;
-import com.marcos.cards_batch.repository.CardRepository;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
-public class ColorIdentityProcessor implements ItemProcessor<ScryfallCardDto, List<ColorIdentity>> {
-    private final CardRepository cardRepository;
-
-    public ColorIdentityProcessor(CardRepository cardRepository) {
-        this.cardRepository = cardRepository;
-    }
-
+@Slf4j
+public class ColorIdentityProcessor implements ItemProcessor<ScryfallCardDto, List<ColorIdentityJdbc>> {
     @Override
-    public @Nullable List<ColorIdentity> process(ScryfallCardDto item) throws Exception {
-        List<ColorIdentity> colorIdentities = new ArrayList<>();
-
-        Card card = cardRepository.getReferenceById(item.id());
+    public @Nullable List<ColorIdentityJdbc> process(ScryfallCardDto item) throws Exception {
+        List<ColorIdentityJdbc> colorIdentities = new ArrayList<>();
 
         for (String color : item.colorIdentity()) {
-            ColorIdentityId id = new ColorIdentityId();
-            id.setCardId(item.id());
-            id.setColor(Color.valueOf(color.toUpperCase()));
-
-            ColorIdentity colorIdentity = new ColorIdentity();
-            colorIdentity.setId(id);
-            colorIdentity.setCard(card);
-
+            ColorIdentityJdbc colorIdentity = new ColorIdentityJdbc();
+            colorIdentity.setCardId(item.id());
+            colorIdentity.setColor(Color.valueOf(color.toUpperCase()));
             colorIdentities.add(colorIdentity);
         }
+        log.info("Processing colors of card - {}", item.id());
 
         return colorIdentities;
     }

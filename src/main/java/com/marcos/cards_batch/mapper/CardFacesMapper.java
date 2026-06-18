@@ -2,16 +2,15 @@ package com.marcos.cards_batch.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import com.marcos.cards_batch.domain.entity.CardFace;
+import com.marcos.cards_batch.domain.entity.CardFaceJdbc;
 import com.marcos.cards_batch.domain.enums.Color;
 import com.marcos.cards_batch.dto.CardFacesDto;
 
 @Mapper(componentModel = "spring")
 public interface CardFacesMapper {
-    @Mapping(target = "card", ignore = true)
-    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "cardId", ignore = true)
     @Mapping(target = "faceIndex", ignore = true)
-    CardFace toEntity(CardFacesDto dto);
+    CardFaceJdbc toEntity(CardFacesDto dto);
 
     default Color mapColor(String color) {
         try {

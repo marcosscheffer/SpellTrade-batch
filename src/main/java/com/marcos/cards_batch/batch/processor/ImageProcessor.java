@@ -1,81 +1,81 @@
 package com.marcos.cards_batch.batch.processor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.jspecify.annotations.Nullable;
+import org.springframework.batch.core.listener.StepExecutionListener;
+import org.springframework.batch.core.step.StepExecution;
 import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.stereotype.Component;
-import com.marcos.cards_batch.domain.entity.Card;
 import com.marcos.cards_batch.domain.entity.CardFace;
-import com.marcos.cards_batch.domain.entity.Image;
+import com.marcos.cards_batch.domain.entity.ImageJdbc;
+import com.marcos.cards_batch.domain.key.CardFaceKey;
 import com.marcos.cards_batch.dto.CardFacesDto;
 import com.marcos.cards_batch.dto.ScryfallCardDto;
 import com.marcos.cards_batch.mapper.ImageMapper;
 import com.marcos.cards_batch.repository.CardFaceRepository;
-import com.marcos.cards_batch.repository.CardRepository;
-import com.marcos.cards_batch.repository.ImageRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class ImageProcessor implements ItemProcessor<ScryfallCardDto, List<Image>>{
-    private CardRepository cardRepository;
-    private CardFaceRepository cardFaceRepository;
-    private ImageRepository imageRepository;
-    private ImageMapper imageMapper;
+public class ImageProcessor implements ItemProcessor<ScryfallCardDto, List<ImageJdbc>>, StepExecutionListener{
+    private final CardFaceRepository cardFaceRepository;
+    private final ImageMapper imageMapper;
 
-    public ImageProcessor(CardRepository cardRepository, CardFaceRepository cardFaceRepository,
-            ImageMapper imageMapper, ImageRepository imageRepository) {
-        this.cardRepository = cardRepository;
+    private Map<CardFaceKey, Long> cache = new HashMap<>();
+    
+    public ImageProcessor(CardFaceRepository cardFaceRepository, ImageMapper imageMapper) {
         this.cardFaceRepository = cardFaceRepository;
         this.imageMapper = imageMapper;
-        this.imageRepository = imageRepository;
     }
 
     @Override
-    public @Nullable List<Image> process(ScryfallCardDto item) throws Exception {
+    public void beforeStep(StepExecution stepExecution) {
+        List<CardFace> cardFaces = cardFaceRepository.findAll();
+        for(CardFace face : cardFaces) {
+            CardFaceKey key = new CardFaceKey(face.getCard().getId(), face.getFaceIndex());
+            cache.put(key, face.getId());
+        }
+    }
+
+    @Override
+    public @Nullable List<ImageJdbc> process(ScryfallCardDto item) throws Exception {
         if (item.cardFaces() == null && item.imageUris() == null) {
             log.debug("Image not found {}", item.name());
             return null;
         }
                 
-        List<Image> images = new ArrayList<>();
+        List<ImageJdbc> images = new ArrayList<>();
 
         if (item.cardFaces() != null) {
             short index = 0;
-            for (CardFacesDto face : item.cardFaces()) {                
+            for (CardFacesDto face : item.cardFaces()) {
                 if (face.imageUris() == null) {
-                    log.warn("Skipping card without image {}", item.id());
+                    log.debug("Images uris not found in face {}", face.name());
                     index++;
                     continue;
                 }
-                
-                CardFace cardFace = cardFaceRepository.findByCardIdAndFaceIndex(item.id(), index)
-                    .orElseThrow(() -> new EntityNotFoundException("CardFace not found"));                    
-                boolean exists = imageRepository.existsByCardFaceAndFaceIndex(cardFace, index);
-                if (!exists){
-                    Image image = imageMapper.toEntity(face.imageUris());
-                
-                    image.setCardFace(cardFace);
-                    image.setFaceIndex(index);
-                    images.add(image);
-                } 
+                CardFaceKey key = new CardFaceKey(item.id(), index);
+                Long faceId = cache.get(key);
+
+                ImageJdbc image = imageMapper.toEntity(face.imageUris());
+                image.setFaceIndex(index);
+                image.setCardFace(faceId);
+                image.setCardId(null);
+                images.add(image);
                 index++;
             }
         } else {
-            boolean exists = imageRepository.existsByCardId(item.id());
-            
-            if (!exists) {
-                Card card = cardRepository.getReferenceById(item.id());
-                Image image = imageMapper.toEntity(item.imageUris());
-                image.setCard(card);
-                images.add(image);
-            }
+            ImageJdbc image = imageMapper.toEntity(item.imageUris());
+            image.setFaceIndex((short) 0);
+            image.setCardId(item.id());
+            image.setCardFace(null);
+            images.add(image);
         }
 
-        log.debug("Processing image {}", item.name());
-        
+        log.info("Processing image {}", item.name());
         return images;
     }
 }

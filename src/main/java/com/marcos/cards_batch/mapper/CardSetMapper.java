@@ -2,7 +2,7 @@ package com.marcos.cards_batch.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import com.marcos.cards_batch.domain.entity.CardSet;
+import com.marcos.cards_batch.domain.entity.CardSetJdbc;
 import com.marcos.cards_batch.domain.enums.SetType;
 import com.marcos.cards_batch.dto.ScryfallCardDto;
 
@@ -12,7 +12,7 @@ public interface CardSetMapper {
     @Mapping(source = "setName", target = "name")
     @Mapping(source = "set", target = "code")
     @Mapping(source = "setType", target = "type")
-    CardSet toEntity(ScryfallCardDto dto);
+    CardSetJdbc toEntity(ScryfallCardDto dto);
 
     default SetType mapType(String type) {
         try {
