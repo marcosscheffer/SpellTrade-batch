@@ -6,11 +6,9 @@ import org.springframework.batch.infrastructure.item.Chunk;
 import org.springframework.batch.infrastructure.item.ItemWriter;
 import org.springframework.stereotype.Component;
 import com.marcos.cards_batch.domain.entity.ImageJdbc;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @Component
-@Slf4j
 public class ImageWriter implements ItemWriter<ImageJdbc>{
     private final JdbcTemplate jdbcTemplate;
     public ImageWriter(JdbcTemplate jdbcTemplate) {

@@ -11,6 +11,7 @@ import com.marcos.cards_batch.batch.tasklet.ScryfallDownloadTasklet;
 public class DownloadCardStepConfig {
     private final ScryfallDownloadTasklet scryfallDownloadTasklet;
 
+
     public DownloadCardStepConfig(ScryfallDownloadTasklet scryfallDownloadTasklet) {
         this.scryfallDownloadTasklet = scryfallDownloadTasklet;
     }

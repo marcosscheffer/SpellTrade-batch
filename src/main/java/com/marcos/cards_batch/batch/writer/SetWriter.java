@@ -6,10 +6,8 @@ import org.springframework.batch.infrastructure.item.ItemWriter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import com.marcos.cards_batch.domain.entity.CardSetJdbc;
-import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Slf4j
 public class SetWriter implements ItemWriter<CardSetJdbc>{
     private final JdbcTemplate jdbcTemplate;
 

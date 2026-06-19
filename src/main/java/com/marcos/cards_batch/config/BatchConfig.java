@@ -7,18 +7,15 @@ import org.springframework.batch.core.step.Step;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.marcos.cards_batch.batch.listener.JobSummaryListener;
 
 
 @Configuration
 public class BatchConfig {
-    private final JobRepository jobRepository;
-
-    public BatchConfig(JobRepository jobRepository) {
-        this.jobRepository = jobRepository;
-    }
-
     @Bean
     public Job importScryfallCardsJob(
+        JobRepository jobRepository,
+        JobSummaryListener jobSummaryListener,
         @Qualifier("downloadCardStep") Step downloadCardStep,
         @Qualifier("setStep") Step setStep,
         @Qualifier("cardStep") Step cardStep,
@@ -26,9 +23,9 @@ public class BatchConfig {
         @Qualifier("cardFaceStep") Step cardFaceStep,
         @Qualifier("imageStep") Step imageStep,
         @Qualifier("legalityStep") Step legalityStep
-
     ) {
         return new JobBuilder("importScryfallCardsJob", jobRepository)
+            .listener(jobSummaryListener)
             .start(downloadCardStep)
             .next(setStep)
             .next(cardStep)

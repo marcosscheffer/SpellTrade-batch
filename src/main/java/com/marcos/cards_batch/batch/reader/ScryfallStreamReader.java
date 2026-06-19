@@ -11,10 +11,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marcos.cards_batch.dto.ScryfallCardDto;
-import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Slf4j
 public class ScryfallStreamReader implements ItemReader<ScryfallCardDto>{
 
     private final ObjectMapper objectMapper;
@@ -25,7 +23,6 @@ public class ScryfallStreamReader implements ItemReader<ScryfallCardDto>{
     }
     
     private void init() throws IOException {
-        log.info("Start reading cards");
         Path path = Paths.get("data", "cards.json");
         parser = null;
         parser = objectMapper.getFactory().createParser(Files.newInputStream(path));

@@ -8,10 +8,8 @@ import org.springframework.stereotype.Component;
 import com.marcos.cards_batch.domain.entity.ColorIdentityJdbc;
 import com.marcos.cards_batch.domain.enums.Color;
 import com.marcos.cards_batch.dto.ScryfallCardDto;
-import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Slf4j
 public class ColorIdentityProcessor implements ItemProcessor<ScryfallCardDto, List<ColorIdentityJdbc>> {
     @Override
     public @Nullable List<ColorIdentityJdbc> process(ScryfallCardDto item) throws Exception {
@@ -23,7 +21,6 @@ public class ColorIdentityProcessor implements ItemProcessor<ScryfallCardDto, Li
             colorIdentity.setColor(Color.valueOf(color.toUpperCase()));
             colorIdentities.add(colorIdentity);
         }
-        log.info("Processing colors of card - {}", item.id());
 
         return colorIdentities;
     }

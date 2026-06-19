@@ -16,10 +16,8 @@ import com.marcos.cards_batch.dto.CardFacesDto;
 import com.marcos.cards_batch.dto.ScryfallCardDto;
 import com.marcos.cards_batch.mapper.ImageMapper;
 import com.marcos.cards_batch.repository.CardFaceRepository;
-import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Slf4j
 public class ImageProcessor implements ItemProcessor<ScryfallCardDto, List<ImageJdbc>>, StepExecutionListener{
     private final CardFaceRepository cardFaceRepository;
     private final ImageMapper imageMapper;
@@ -43,7 +41,6 @@ public class ImageProcessor implements ItemProcessor<ScryfallCardDto, List<Image
     @Override
     public @Nullable List<ImageJdbc> process(ScryfallCardDto item) throws Exception {
         if (item.cardFaces() == null && item.imageUris() == null) {
-            log.debug("Image not found {}", item.name());
             return null;
         }
                 
@@ -53,7 +50,6 @@ public class ImageProcessor implements ItemProcessor<ScryfallCardDto, List<Image
             short index = 0;
             for (CardFacesDto face : item.cardFaces()) {
                 if (face.imageUris() == null) {
-                    log.debug("Images uris not found in face {}", face.name());
                     index++;
                     continue;
                 }
@@ -75,7 +71,6 @@ public class ImageProcessor implements ItemProcessor<ScryfallCardDto, List<Image
             images.add(image);
         }
 
-        log.info("Processing image {}", item.name());
         return images;
     }
 }

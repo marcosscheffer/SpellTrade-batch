@@ -24,7 +24,4 @@ public class CardFaceFlatten implements ItemWriter<List<CardFaceJdbc>>{
         
         delegate.write(new Chunk<>(flat));
     }
-
-
-    
 }

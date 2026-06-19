@@ -24,5 +24,4 @@ public class ColorIdentityFlatten implements ItemWriter<List<ColorIdentityJdbc>>
         
         delegate.write(new Chunk<>(flat));
     }
-    
 }

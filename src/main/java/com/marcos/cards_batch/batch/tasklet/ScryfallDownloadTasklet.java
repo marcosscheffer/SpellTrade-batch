@@ -20,8 +20,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Component
+@Slf4j
 public class ScryfallDownloadTasklet implements Tasklet {
     private static final String URL = "https://api.scryfall.com/bulk-data/all-cards";
     private final HttpClient client = HttpClient.newHttpClient();
