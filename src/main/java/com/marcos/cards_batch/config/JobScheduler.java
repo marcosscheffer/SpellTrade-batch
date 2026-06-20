@@ -20,8 +20,8 @@ public class JobScheduler {
         this.importScryfallCardsJob = importScryfallCardsJob;
     }
 
-    //@Scheduled(cron = "0 0 3 * * *")
-    @Scheduled(fixedRate = 600000)
+    @Scheduled(cron = "0 0 3 * * *")
+    //@Scheduled(fixedRate = 600000)
     public void runImportJob() {
         try {
             JobParameters params = new JobParametersBuilder()
