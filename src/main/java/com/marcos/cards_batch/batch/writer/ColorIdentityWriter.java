@@ -20,7 +20,7 @@ public class ColorIdentityWriter implements ItemWriter<ColorIdentityJdbc> {
         List<? extends ColorIdentityJdbc> items = chunk.getItems();
 
         String sql = """
-                INSERT INTO color_identity
+                INSERT INTO cards.color_identity
                 ("card_id", "color")
                 VALUES
                 (?, ?)

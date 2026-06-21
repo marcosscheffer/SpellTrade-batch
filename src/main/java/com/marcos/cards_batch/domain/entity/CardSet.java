@@ -11,7 +11,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "sets")
+@Table(
+    schema = "cards",
+    name = "sets")
 @Getter
 @Setter
 public class CardSet {

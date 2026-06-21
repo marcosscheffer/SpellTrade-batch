@@ -1,2 +1,0 @@
-ALTER TABLE cards
-    ALTER COLUMN oracle_id DROP NOT NULL;

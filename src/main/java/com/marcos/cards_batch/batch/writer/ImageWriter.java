@@ -19,7 +19,7 @@ public class ImageWriter implements ItemWriter<ImageJdbc>{
         List<? extends ImageJdbc> items = chunk.getItems();
 
         String sql = """
-                INSERT INTO images
+                INSERT INTO cards.images
                 ("card_id", "card_face", "small", "normal", "large", "png", "art_crop", "border_crop", "face_index")
                 VALUES
                 (?, ?, ?, ?, ?, ?, ?, ?, ?)
