@@ -19,7 +19,7 @@ public class SetWriter implements ItemWriter<CardSetJdbc>{
     public void write(Chunk<? extends CardSetJdbc> chunk) throws Exception {
         List<? extends CardSetJdbc> items = chunk.getItems();
         String sql = """
-                INSERT INTO cards.sets
+                INSERT INTO card.sets
                 ("id", "name", "code", "type")
                 VALUES
                 (?, ?, ?, ?)

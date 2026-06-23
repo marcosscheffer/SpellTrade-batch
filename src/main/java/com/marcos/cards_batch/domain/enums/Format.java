@@ -22,5 +22,6 @@ public enum Format {
     OLDSCHOOL,
     PREMODERN,
     PREDH,
-    TLR
+    TLR,
+    COMPETITIVEBRAWL
 }

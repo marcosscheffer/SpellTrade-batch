@@ -22,7 +22,7 @@ public class CardWriter implements ItemWriter<CardJdbc>{
         List<? extends CardJdbc> items = chunk.getItems();
         
         String sql = """
-                INSERT INTO cards.cards
+                INSERT INTO card.cards
                 ("id", "oracle_id", "name", "lang", "mana_cost", "released_at", 
                 "type_line", "oracle_text", "reserved", "set_id", "power", "toughness", 
                 "loyalty", "rarity")

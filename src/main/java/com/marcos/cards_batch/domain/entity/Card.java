@@ -16,7 +16,7 @@ import lombok.Setter;
 
 @Entity
 @Table(
-    schema = "cards",
+    schema = "card",
     name = "cards")
 @Getter
 @Setter

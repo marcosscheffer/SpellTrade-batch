@@ -13,7 +13,7 @@ import lombok.Setter;
 
 @Entity
 @Table(
-    schema = "cards",
+    schema = "card",
     name = "card_faces")
 @Getter
 @Setter

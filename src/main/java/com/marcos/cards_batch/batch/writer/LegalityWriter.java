@@ -19,7 +19,7 @@ public class LegalityWriter implements ItemWriter<CardLegalityJdbc> {
     public void write(Chunk<? extends CardLegalityJdbc> chunk) throws Exception {
         List<? extends CardLegalityJdbc> items = chunk.getItems();
         String sql = """
-                INSERT INTO cards.card_legalities
+                INSERT INTO card.card_legalities
                 ("card_id", "format", "status")
                 VALUES
                 (?, ?, ?)

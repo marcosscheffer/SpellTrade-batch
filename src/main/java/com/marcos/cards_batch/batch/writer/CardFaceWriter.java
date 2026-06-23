@@ -19,7 +19,7 @@ public class CardFaceWriter implements ItemWriter<CardFaceJdbc> {
     public void write(Chunk<? extends CardFaceJdbc> chunk) throws Exception {
         List<? extends CardFaceJdbc> items = chunk.getItems();
         String sql = """
-                INSERT INTO cards.card_faces
+                INSERT INTO card.card_faces
                 ("card_id", "face_index", "name", "mana_cost", "type_line", "oracle_text", "power", "toughness", "loyalty")
                 VALUES 
                 (?, ?, ?, ?, ?, ?, ?, ?, ?)

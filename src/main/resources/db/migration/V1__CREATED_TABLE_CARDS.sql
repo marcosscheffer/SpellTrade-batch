@@ -1,13 +1,13 @@
-CREATE SCHEMA IF NOT EXISTS cards;
+CREATE SCHEMA IF NOT EXISTS card;
 
-CREATE TABLE cards.sets (
+CREATE TABLE card.sets (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     code VARCHAR(10) NOT NULL,
     type VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE cards.cards (
+CREATE TABLE card.cards (
     id UUID PRIMARY KEY,
     oracle_id UUID,
     name VARCHAR(255) NOT NULL,
@@ -25,10 +25,10 @@ CREATE TABLE cards.cards (
 
     CONSTRAINT fk_set
         FOREIGN KEY (set_id)
-        REFERENCES cards.sets(id)
+        REFERENCES card.sets(id)
 );
 
-CREATE TABLE cards.card_faces(
+CREATE TABLE card.card_faces(
     id BIGSERIAL PRIMARY KEY,
     card_id UUID NOT NULL,
     face_index SMALLINT NOT NULL,
@@ -42,10 +42,10 @@ CREATE TABLE cards.card_faces(
 
     CONSTRAINT fk_card_face
         FOREIGN KEY (card_id)
-        REFERENCES cards.cards(id)
+        REFERENCES card.cards(id)
 );
 
-CREATE TABLE cards.images (
+CREATE TABLE card.images (
     id BIGSERIAL PRIMARY KEY,
     card_id UUID,
     card_face BIGINT,
@@ -59,11 +59,11 @@ CREATE TABLE cards.images (
 
     CONSTRAINT fk_images_card
         FOREIGN KEY (card_id)
-        REFERENCES cards.cards(id),
+        REFERENCES card.cards(id),
 
     CONSTRAINT fk_images_face
         FOREIGN KEY (card_face)
-        REFERENCES cards.card_faces(id),
+        REFERENCES card.card_faces(id),
 
     CONSTRAINT chck_one_owner 
         CHECK (
@@ -73,7 +73,7 @@ CREATE TABLE cards.images (
     )
 );
 
-CREATE TABLE cards.card_legalities (
+CREATE TABLE card.card_legalities (
     card_id UUID NOT NULL,
     format VARCHAR(50) NOT NULL,
     status VARCHAR(50) NOT NULL,
@@ -82,15 +82,15 @@ CREATE TABLE cards.card_legalities (
 
     CONSTRAINT fk_card_legalities
         FOREIGN KEY (card_id)
-        REFERENCES cards.cards(id)
+        REFERENCES card.cards(id)
 );
 
-CREATE TABLE cards.color_identity (
+CREATE TABLE card.color_identity (
     card_id UUID NOT NULL,
     color VARCHAR(50) NOT NULL,
     PRIMARY KEY(card_id, color),
 
     CONSTRAINT fk_color_identity_card
         FOREIGN KEY (card_id)
-        REFERENCES cards.cards(id)
+        REFERENCES card.cards(id)
 );
